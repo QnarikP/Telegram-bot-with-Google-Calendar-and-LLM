@@ -1,6 +1,7 @@
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from urllib.parse import urlencode
+import pytz
 
 SERVICE_ACCOUNT_FILE = 'service_account_key.json'
 SCOPES = ['<https://www.googleapis.com/auth/calendar>']
@@ -34,8 +35,16 @@ def create_event(event_name, start_time, end_time, description="", location=""):
     return created_event.get('htmlLink')
 
 def create_event_link(event_name, start_time, end_time, description="", location=""):
-    start_time_str = start_time.strftime("%Y%m%dT%H%M%SZ")
-    end_time_str = end_time.strftime("%Y%m%dT%H%M%SZ")
+    if start_time.tzinfo is None:
+        raise ValueError("Start time must be timezone-aware.")
+    if end_time.tzinfo is None:
+        raise ValueError("End time must be timezone-aware.")
+
+    start_time_utc = start_time.astimezone(pytz.utc)
+    end_time_utc = end_time.astimezone(pytz.utc)
+
+    start_time_str = start_time_utc.strftime("%Y%m%dT%H%M%SZ")
+    end_time_str = end_time_utc.strftime("%Y%m%dT%H%M%SZ")
 
     event_details = {
         'text': event_name,
@@ -48,4 +57,3 @@ def create_event_link(event_name, start_time, end_time, description="", location
 
     link = f"<https://www.google.com/calendar/render?action=TEMPLATE&{urlencode(event_details)}>"
     return link
-
