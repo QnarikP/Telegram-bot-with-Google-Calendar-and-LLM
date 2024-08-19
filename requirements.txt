@@ -1,0 +1,9 @@
+python-telegram-bot==20.1
+google-auth==2.16.1
+google-auth-oauthlib==0.7.1
+google-auth-httplib2==0.1.0
+google-api-python-client==2.89.0
+pytz
+openai==0.27.0
+transformers
+torch

@@ -1,0 +1,5 @@
+tg-env/
+__pycache__/
+service_account_key.json
+config.py 
+token.txt
